@@ -26,7 +26,7 @@
                 "I am Leaving",
                 "Have a Good day"
             ],
-            "reponses": [
+            "responses": [
                 "Sad to see you go :(",
                 "Talk to you later",
                 "Goodbye!"
@@ -43,6 +43,11 @@
                 "how old is wesley",
                 "age?"
             ],
+            "responses": [
+                "I am 20 years old",
+                "20 years",
+                "20 years old"
+            ],
             "context_set": ""
         },
         {
@@ -57,7 +62,7 @@
                 "I'm Wesley"
             ],
             "context_set": ""
-        }
+        },
         {
             "tag": "shop",
             "patterns": [
