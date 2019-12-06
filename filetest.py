@@ -10,6 +10,4 @@ for r, d, f in os.walk(path):
             files.append(os.path.join(r, file))
 
 for f in files:
-    f.rsplit('\\',1)[1]
-    print("starting with: {}".format(f))
     print(f)

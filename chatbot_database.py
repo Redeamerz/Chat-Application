@@ -103,6 +103,7 @@ if __name__ == "__main__":
     create_table()
     row_counter = 0
     paired_rows = 0
+    updated_rows = 0
 
 # r=root, d=directories, f = files
     for r, d, f in os.walk(path):
@@ -131,6 +132,7 @@ if __name__ == "__main__":
                         if existing_comment_score:
                             if score > existing_comment_score:
                                 sql_insert_replace_comment(comment_id, parent_id, parent_data, body, subreddit, created_utc, score)
+                                updated_rows += 1
                         
                         else:
                             if parent_data:
@@ -140,4 +142,4 @@ if __name__ == "__main__":
                                 sql_insert_no_parent(comment_id, parent_id, body, subreddit, created_utc, score)
 
                 if row_counter % 100000 == 0:
-                    print("Total rows read: {}, Paired rows: {}, Time: {}".format(row_counter, paired_rows, datetime.now() - time_now))
+                    print("Total rows read: {}, Paired rows: {}, Updated rows: {}, Time: {}".format(row_counter, paired_rows, updated_rows, datetime.now() - time_now))
