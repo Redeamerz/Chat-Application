@@ -1,13 +1,16 @@
 import sqlite3
 import json
+import os
 from datetime import datetime
+import os
 
-timeframe = '2015-01'
 sql_transaction = []
 
 time_now = datetime.now()
+path = 'E:\\reddit_data'
+files = []
 
-connection = sqlite3.connect('{}.db'.format(timeframe))
+connection = sqlite3.connect('chat-application.db')
 c = connection.cursor()
 
 
@@ -101,32 +104,40 @@ if __name__ == "__main__":
     row_counter = 0
     paired_rows = 0
 
-    with open("./RC_{}".format(timeframe), buffering=1000) as f:
-        for row in f:
-            row_counter += 1
-            row = json.loads(row)
-            parent_id = row['parent_id']
-            body = format_data(row['body'])
-            created_utc = row['created_utc']
-            score = row['score']
-            comment_id = row["name"]
-            subreddit = row['subreddit']
+# r=root, d=directories, f = files
+    for r, d, f in os.walk(path):
+        for file in f:
+            if 'RC_' in file:
+                files.append(os.path.join(r, file))
 
-            parent_data = find_parent(parent_id)
+    for f in files:
+        print("starting with: {}".format(f.rsplit('\\', 1)[1]))
+        with open(f, buffering=1000) as f:
+            for row in f:
+                row_counter += 1
+                row = json.loads(row)
+                parent_id = row['parent_id']
+                body = format_data(row['body'])
+                created_utc = row['created_utc']
+                score = row['score']
+                comment_id = row["name"]
+                subreddit = row['subreddit']
 
-            if score >= 2:
-                if acceptable(body):    
-                    existing_comment_score = find_existing_score(parent_id)
-                    if existing_comment_score:
-                        if score > existing_comment_score:
-                            sql_insert_replace_comment(comment_id, parent_id, parent_data, body, subreddit, created_utc, score)
-                    
-                    else:
-                        if parent_data:
-                            sql_insert_has_parent(comment_id, parent_id, parent_data, body, subreddit, created_utc, score)
-                            paired_rows += 1
+                parent_data = find_parent(parent_id)
+
+                if score >= 2:
+                    if acceptable(body):    
+                        existing_comment_score = find_existing_score(parent_id)
+                        if existing_comment_score:
+                            if score > existing_comment_score:
+                                sql_insert_replace_comment(comment_id, parent_id, parent_data, body, subreddit, created_utc, score)
+                        
                         else:
-                            sql_insert_no_parent(comment_id, parent_id, body, subreddit, created_utc, score)
+                            if parent_data:
+                                sql_insert_has_parent(comment_id, parent_id, parent_data, body, subreddit, created_utc, score)
+                                paired_rows += 1
+                            else:
+                                sql_insert_no_parent(comment_id, parent_id, body, subreddit, created_utc, score)
 
-            if row_counter % 100000 == 0:
-                print("Total rows read: {}, Paired rows: {}, Time: {}".format(row_counter, paired_rows, datetime.now() - time_now))
+                if row_counter % 100000 == 0:
+                    print("Total rows read: {}, Paired rows: {}, Time: {}".format(row_counter, paired_rows, datetime.now() - time_now))
