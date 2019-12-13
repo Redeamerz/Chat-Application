@@ -2,7 +2,6 @@ import sqlite3
 import json
 import os
 from datetime import datetime
-import os
 
 sql_transaction = []
 
@@ -10,7 +9,7 @@ time_now = datetime.now()
 path = 'E:\\reddit_data'
 files = []
 
-connection = sqlite3.connect('chat-application.db')
+connection = sqlite3.connect('D:\\chat-application.db')
 c = connection.cursor()
 
 
@@ -143,3 +142,5 @@ if __name__ == "__main__":
 
                 if row_counter % 100000 == 0:
                     print("Total rows read: {}, Paired rows: {}, Updated rows: {}, Time: {}".format(row_counter, paired_rows, updated_rows, datetime.now() - time_now))
+            
+print("Finished")
