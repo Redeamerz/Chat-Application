@@ -321,5 +321,7 @@ node_modules/
 npm-debug.log
 yarn-error.log
 chat-application.db
+*.from
+*.to
 
 # End of https://www.gitignore.io/api/vue,java,vuejs,maven,python,pycharm,intellij,visualstudiocode
